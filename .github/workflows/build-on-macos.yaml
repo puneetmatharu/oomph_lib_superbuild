@@ -34,7 +34,7 @@ jobs:
         run: brew install open-mpi
 
       - name: Configure
-        run: cmake -G Ninja -DOOMPH_USE_OPENBLAS_FROM=$(brew --prefix openblas) -DOOMPH_ENABLE_MPI=${{ matrix.mpi }} -B build
+        run: CC=gcc CXX=g++ cmake -G Ninja -DOOMPH_USE_OPENBLAS_FROM=$(brew --prefix openblas) -DOOMPH_ENABLE_MPI=${{ matrix.mpi }} -B build
 
       - name: Build/install
         id: build
