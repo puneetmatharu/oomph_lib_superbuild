@@ -1,0 +1,49 @@
+# cmake-format: off
+# =============================================================================
+# DESCRIPTION:
+# ------------
+#
+# NOTE: The OpenBLAS installation automatically runs self-tests but it's hard
+# to extract stats from them (partly because I don't know how a failed test
+# would be reported; there's no executive summary.
+#
+# USAGE:
+# ------
+#
+# ...to be filled in...
+#
+# EXAMPLE:
+# --------
+#
+# ...to be filled in...
+#
+# =============================================================================
+# cmake-format: on
+include_guard()
+
+set(OPENBLAS_TARBALL_URL
+    ${OOMPH_THIRD_PARTY_TAR_FILE_URL}/OpenBLAS-0.3.24.tar.gz)
+set(OPENBLAS_INSTALL_DIR "${OOMPH_THIRD_PARTY_INSTALL_DIR}/openblas")
+
+# Define how to configure/build/install the project
+oomph_get_external_project_helper(
+  PROJECT_NAME openblas
+  URL "${OPENBLAS_TARBALL_URL}"
+  INSTALL_DIR "${OPENBLAS_INSTALL_DIR}"
+  CONFIGURE_HANDLED_BY_BUILD
+  BUILD_COMMAND
+    ${MAKE_EXECUTABLE} --jobs=${NUM_THREADS_FOR_PARALLEL_MAKE}
+    CXX=${CMAKE_CXX_COMPILER} CC=${CMAKE_C_COMPILER}
+    FC=${CMAKE_Fortran_COMPILER}
+  INSTALL_COMMAND ${MAKE_EXECUTABLE} --jobs=${NUM_THREADS_FOR_PARALLEL_MAKE}
+                  PREFIX=${OPENBLAS_INSTALL_DIR} install
+  TEST_COMMAND ""
+  INSTALL_BYPRODUCTS "")
+
+# Define OpenBLAS_LIBRARIES for HYPRE and Trilinos to use
+set(OpenBLAS_LIBNAME
+    "${CMAKE_STATIC_LIBRARY_PREFIX}openblas${CMAKE_STATIC_LIBRARY_SUFFIX})")
+set(OpenBLAS_LIBRARIES "${OPENBLAS_INSTALL_DIR}/lib/${OpenBLAS_LIBNAME}" CACHE
+    PATH "" FORCE)
+
+# ---------------------------------------------------------------------------------
