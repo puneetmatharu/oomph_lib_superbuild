@@ -32,9 +32,12 @@ oomph_get_external_project_helper(
   PROJECT_NAME hypre
   URL "${HYPRE_TARBALL_URL}"
   INSTALL_DIR "${HYPRE_INSTALL_DIR}"
-  CONFIGURE_COMMAND ${CMAKE_COMMAND} -G=${CMAKE_GENERATOR} -S=src -B=src/cmbuild
-                    --install-prefix=<INSTALL_DIR>
-  CMAKE_CACHE_ARGS
+  CONFIGURE_COMMAND
+    ${CMAKE_COMMAND}
+    -G=${CMAKE_GENERATOR}
+    -S=src
+    -B=src/cmbuild
+    --install-prefix=<INSTALL_DIR>
     -DHYPRE_ENABLE_SHARED=OFF
     -DHYPRE_ENABLE_BIGINT=OFF
     -DHYPRE_ENABLE_MIXEDINT=OFF
