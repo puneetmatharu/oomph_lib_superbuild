@@ -34,10 +34,10 @@ oomph_get_external_project_helper(
   INSTALL_DIR "${HYPRE_INSTALL_DIR}"
   CONFIGURE_COMMAND
     ${CMAKE_COMMAND}
+    --install-prefix=<INSTALL_DIR>
     -G=${CMAKE_GENERATOR}
     -S=src
     -B=src/cmbuild
-    --install-prefix=<INSTALL_DIR>
     -DHYPRE_ENABLE_SHARED=OFF
     -DHYPRE_ENABLE_BIGINT=OFF
     -DHYPRE_ENABLE_MIXEDINT=OFF
@@ -56,8 +56,8 @@ oomph_get_external_project_helper(
     -DHYPRE_ENABLE_HYPRE_LAPACK=OFF
     -DTPL_ENABLE_BLAS=ON
     -DTPL_ENABLE_LAPACK=ON
-    -DTPL_BLAS_LIBRARIES="${OpenBLAS_LIBRARIES}"
-    -DTPL_LAPACK_LIBRARIES="${OpenBLAS_LIBRARIES}"
+    -DTPL_BLAS_LIBRARIES=${OpenBLAS_LIBRARIES}
+    -DTPL_LAPACK_LIBRARIES=${OpenBLAS_LIBRARIES}
   BUILD_COMMAND cmake --build src/cmbuild
   INSTALL_COMMAND cmake --install src/cmbuild
   TEST_COMMAND ""

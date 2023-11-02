@@ -64,8 +64,8 @@ oomph_get_external_project_helper(
   PROJECT_NAME trilinos
   URL "${TRILINOS_TARBALL_URL}"
   INSTALL_DIR "${TRILINOS_INSTALL_DIR}"
-  CONFIGURE_COMMAND ${CMAKE_COMMAND} -G=${CMAKE_GENERATOR} -B=build
-                    --install-prefix=<INSTALL_DIR> ${TRILINOS_OPTION_ARGS}
+  CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR>
+                    -G=${CMAKE_GENERATOR} -B=build ${TRILINOS_OPTION_ARGS}
   BUILD_COMMAND cmake --build build
   INSTALL_COMMAND cmake --install build
   TEST_COMMAND ""
