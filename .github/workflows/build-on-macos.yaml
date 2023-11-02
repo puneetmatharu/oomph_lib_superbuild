@@ -39,6 +39,7 @@ jobs:
       - name: Build/install
         id: build
         run: cmake --build build
+        continue-on-error: true
 
       - name: Upload build logs
         uses: actions/upload-artifact@v3
