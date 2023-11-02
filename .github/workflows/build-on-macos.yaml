@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: brew install cmake ninja openblas && brew reinstall gcc
+        run: brew install cmake ninja openblas automake && brew reinstall gcc
 
       - name: Install MPI dependencies (if required)
         if: matrix.mpi == 'ON'
