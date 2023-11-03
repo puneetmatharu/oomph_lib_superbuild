@@ -31,12 +31,35 @@ project(
 # ------------------------------[ BUILD OPTIONS ]-------------------------------
 
 option(OOMPH_ENABLE_MPI "Build third-party libraries with MPI support?" OFF)
-option(OOMPH_BUILD_OPENBLAS "Build OpenBLAS?" ON)
-option(OOMPH_BUILD_CGAL "Build CGAL?" ON)
-option(OOMPH_BUILD_MUMPS "Build MUMPS?" ON)
-option(OOMPH_BUILD_HYPRE "Build Hypre?" ON)
-option(OOMPH_BUILD_TRILINOS "Build Trilinos?" ON)
+option(OOMPH_BUILD_OPENBLAS "Build OpenBLAS?" OFF)
+option(OOMPH_BUILD_CGAL "Build CGAL?" OFF)
+option(OOMPH_BUILD_MUMPS "Build MUMPS?" OFF)
+option(OOMPH_BUILD_HYPRE "Build Hypre?" OFF)
+option(OOMPH_BUILD_TRILINOS "Build Trilinos?" OFF)
 
+# cmake-format: off
+# ------------------------------------------------------------------------------
+function(oomph_path_option VAR DOCSTRING VALUE)
+  set(${VAR} ${VALUE} CACHE PATH "${DOCSTRING}")
+  set(OOMPH_CONFIG_VARS ${OOMPH_CONFIG_VARS} ${VAR} CACHE INTERNAL
+    "List of oomph-lib configuration options" FORCE)
+endfunction()
+# ------------------------------------------------------------------------------
+
+# Paths to packages that the user has installed themselves
+oomph_path_option(OOMPH_USE_MPI_FROM "Path to MPI installation" "${OOMPH_USE_MPI_FROM}")
+# oomph_path_option(OOMPH_USE_GMSH_FROM "Path to 'gmsh' executable" "${OOMPH_USE_GMSH_FROM}")
+oomph_path_option(OOMPH_USE_OPENBLAS_FROM "Path to OpenBLAS installation" "${OOMPH_USE_OPENBLAS_FROM}")
+# oomph_path_option(OOMPH_USE_LAPACK_FROM "Path to LAPACK installation" "${OOMPH_USE_LAPACK_FROM}")
+oomph_path_option(OOMPH_USE_GMP_FROM "Path to GMP installation" "${OOMPH_USE_GMP_FROM}")
+oomph_path_option(OOMPH_USE_MPFR_FROM "Path to MPFR installation" "${OOMPH_USE_MPFR_FROM}")
+oomph_path_option(OOMPH_USE_BOOST_FROM "Path to Boost installation" "${OOMPH_USE_BOOST_FROM}")
+oomph_path_option(OOMPH_USE_CGAL_FROM "Path to CGAL installation" "${OOMPH_USE_CGAL_FROM}")
+oomph_path_option(OOMPH_USE_MUMPS_FROM "Path to MUMPS installation" "${OOMPH_USE_MUMPS_FROM}")
+oomph_path_option(OOMPH_USE_HYPRE_FROM "Path to Hypre installation" "${OOMPH_USE_HYPRE_FROM}")
+oomph_path_option(OOMPH_USE_TRILINOS_FROM "Path to Trilinos installation" "${OOMPH_USE_TRILINOS_FROM}")
+
+# cmake-format: on
 # ---------------------------[ INITIAL PROJECT SETUP ]--------------------------
 
 # To handle timestamps when downloading archives via ExternalProject
@@ -113,7 +136,7 @@ endif()
 # --------------------------------[ OPENBLAS ]---------------------------------
 
 if(OOMPH_USE_OPENBLAS_FROM)
-  find_package(OpenBLAS REQUIRED PATHS ${OOMPH_USE_OPENBLAS_FROM})
+  find_package(OpenBLAS 0.3.24 REQUIRED PATHS ${OOMPH_USE_OPENBLAS_FROM})
 elseif(APPLE)
   # FIXME: OpenBLAS doesn't build on macOS Sonoma beta 14.2. Expecting OpenBLAS
   # 0.3.24 to be installed via Homebrew for now...
@@ -125,19 +148,51 @@ endif()
 # ----------------------------------[ CGAL ]-----------------------------------
 
 # FIXME: Currently only works on macOS if "CC=gcc CXX=g++" is passed to CMake
-if(OOMPH_BUILD_CGAL)
+if(OOMPH_USE_CGAL_FROM)
+  if((NOT OOMPH_USE_GMP_FROM)
+     OR (NOT OOMPH_USE_MPFR_FROM)
+     OR (NOT OOMPH_USE_BOOST_FROM))
+    message(
+      FATAL_ERROR
+        "If you define OOMPH_USE_CGAL_FROM, you must also define OOMPH_USE_GMP_FROM, OOMPH_USE_MPFR_FROM and OOMPH_USE_BOOST_FROM!"
+    )
+  endif()
+
+  # NOTE: FindGMP and FindMPFR will read the values of OOMPH_USE_GMP_FROM and
+  # OOMPH_USE_MPFR_FROM
+  find_package(GMP REQUIRED)
+  find_package(MPFR REQUIRED)
+  find_package(
+    Boost 1.83.0 REQUIRED
+    PATHS ${OOMPH_USE_BOOST_FROM}
+    NO_DEFAULT_PATH)
+  find_package(
+    CGAL 5.6 REQUIRED
+    PATHS ${OOMPH_USE_CGAL_FROM}
+    NO_DEFAULT_PATH)
+elseif(OOMPH_BUILD_CGAL)
   include(OomphGetExternalCGAL)
 endif()
 
 # ----------------------------------[ MUMPS ]----------------------------------
 
-if(OOMPH_BUILD_MUMPS)
+if(OOMPH_USE_MUMPS_FROM)
+  find_package(
+    MUMPS 5.6.2.2 REQUIRED
+    PATHS ${OOMPH_USE_MUMPS_FROM}
+    NO_DEFAULT_PATH)
+elseif(OOMPH_BUILD_MUMPS)
   include(OomphGetExternalMUMPS)
 endif()
 
 # ----------------------------------[ HYPRE ]----------------------------------
 
-if(OOMPH_BUILD_HYPRE)
+if(OOMPH_USE_HYPRE_FROM)
+  find_package(
+    HYPRE 2.29.0 REQUIRED
+    PATHS ${OOMPH_USE_HYPRE_FROM}
+    NO_DEFAULT_PATH)
+elseif(OOMPH_BUILD_HYPRE)
   if(NOT OpenBLAS_LIBRARIES)
     message(FATAL_ERROR "Refusing to build HYPRE without OpenBLAS!")
   endif()
@@ -146,7 +201,12 @@ endif()
 
 # ---------------------------------[ TRILINOS ]--------------------------------
 
-if(OOMPH_BUILD_TRILINOS)
+if(OOMPH_USE_TRILINOS_FROM)
+  find_package(
+    Trilinos 14.4.0 REQUIRED
+    PATHS ${OOMPH_USE_TRILINOS_FROM}
+    NO_DEFAULT_PATH)
+elseif(OOMPH_BUILD_TRILINOS)
   if(NOT OpenBLAS_LIBRARIES)
     message(FATAL_ERROR "Refusing to build Trilinos without OpenBLAS!")
   endif()
