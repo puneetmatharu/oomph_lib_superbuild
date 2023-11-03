@@ -57,20 +57,30 @@ if(OOMPH_ENABLE_MPI)
   if(NOT MPI_CXX_INCLUDE_DIRS)
     message(FATAL_ERROR "Requested MPI but MPI_CXX_INCLUDE_DIRS is not set!")
   endif()
-  list(APPEND TRILINOS_OPTION_ARGS -DMPI_BASE_DIR=${MPI_CXX_INCLUDE_DIRS})
+  list(APPEND TRILINOS_OPTION_ARGS -DMPI_BASE_DIR="${MPI_CXX_INCLUDE_DIRS}")
 endif()
 
-message(WARNING "TRILINOS_OPTION_ARGS: ${TRILINOS_OPTION_ARGS}")
-
-oomph_get_external_project_helper(
-  PROJECT_NAME trilinos
+# Define how to configure/build/install the project
+ExternalProject_Add(
+  trilinos
   URL "${TRILINOS_TARBALL_URL}"
   INSTALL_DIR "${TRILINOS_INSTALL_DIR}"
+  LOG_DIR "${CMAKE_BINARY_DIR}/logs"
+  BUILD_IN_SOURCE TRUE
+  LOG_UPDATE TRUE
+  LOG_DOWNLOAD TRUE
+  LOG_CONFIGURE TRUE
+  LOG_BUILD TRUE
+  LOG_INSTALL TRUE
+  LOG_TEST TRUE
+  LOG_MERGED_STDOUTERR TRUE
+  LOG_OUTPUT_ON_FAILURE TRUE
+  UPDATE_DISCONNECTED TRUE
+  BUILD_ALWAYS FALSE
   CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR>
                     -G=${CMAKE_GENERATOR} ${TRILINOS_OPTION_ARGS} -B=build
   BUILD_COMMAND cmake --build build
   INSTALL_COMMAND cmake --install build
-  TEST_COMMAND ""
-  INSTALL_BYPRODUCTS "")
+  TEST_COMMAND "" INSTALL_BYPRODUCTS "")
 
 # ---------------------------------------------------------------------------------
