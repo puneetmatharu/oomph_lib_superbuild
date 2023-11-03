@@ -33,9 +33,9 @@ project(
 # Third-party libraries
 option(OOMPH_ENABLE_MPI "Build third-party libraries with MPI support?" OFF)
 option(OOMPH_BUILD_OPENBLAS "Build OpenBLAS?" ON)
-option(OOMPH_BUILD_CGAL "Build CGAL?" ON)
-option(OOMPH_BUILD_MUMPS "Build MUMPS?" ON)
-option(OOMPH_BUILD_HYPRE "Build Hypre?" ON)
+option(OOMPH_BUILD_CGAL "Build CGAL?" OFF)
+option(OOMPH_BUILD_MUMPS "Build MUMPS?" OFF)
+option(OOMPH_BUILD_HYPRE "Build Hypre?" OFF)
 option(OOMPH_BUILD_TRILINOS "Build Trilinos?" ON)
 
 # ---------------------------[ INITIAL PROJECT SETUP ]--------------------------
