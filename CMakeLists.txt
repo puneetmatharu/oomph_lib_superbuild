@@ -30,12 +30,11 @@ project(
 
 # ------------------------------[ BUILD OPTIONS ]-------------------------------
 
-# Third-party libraries
 option(OOMPH_ENABLE_MPI "Build third-party libraries with MPI support?" OFF)
 option(OOMPH_BUILD_OPENBLAS "Build OpenBLAS?" ON)
-option(OOMPH_BUILD_CGAL "Build CGAL?" OFF)
-option(OOMPH_BUILD_MUMPS "Build MUMPS?" OFF)
-option(OOMPH_BUILD_HYPRE "Build Hypre?" OFF)
+option(OOMPH_BUILD_CGAL "Build CGAL?" ON)
+option(OOMPH_BUILD_MUMPS "Build MUMPS?" ON)
+option(OOMPH_BUILD_HYPRE "Build Hypre?" ON)
 option(OOMPH_BUILD_TRILINOS "Build Trilinos?" ON)
 
 # ---------------------------[ INITIAL PROJECT SETUP ]--------------------------
@@ -113,11 +112,12 @@ endif()
 
 # --------------------------------[ OPENBLAS ]---------------------------------
 
-# FIXME: OpenBLAS doesn't build on macOS Sonoma beta 14.2. Expecting OpenBLAS
-# 0.3.24 to be installed via Homebrew for now...
 if(OOMPH_USE_OPENBLAS_FROM)
-  find_package(OpenBLAS REQUIRED PATHS ${OOMPH_USE_OPENBLAS_FROM}
-                                       /opt/homebrew/Cellar/openblas/0.3.24/)
+  find_package(OpenBLAS REQUIRED PATHS ${OOMPH_USE_OPENBLAS_FROM})
+elseif(APPLE)
+  # FIXME: OpenBLAS doesn't build on macOS Sonoma beta 14.2. Expecting OpenBLAS
+  # 0.3.24 to be installed via Homebrew for now...
+  find_package(OpenBLAS REQUIRED PATHS /opt/homebrew/Cellar/openblas/0.3.24/)
 elseif(OOMPH_BUILD_OPENBLAS)
   include(OomphGetExternalOpenBLAS)
 endif()

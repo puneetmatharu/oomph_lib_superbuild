@@ -26,11 +26,6 @@ set(TRILINOS_TARBALL_URL
 )
 set(TRILINOS_INSTALL_DIR "${OOMPH_THIRD_PARTY_INSTALL_DIR}/trilinos")
 
-set(MPI_BASE_DIR)
-if(OOMPH_ENABLE_MPI AND MPI_FOUND)
-  set(MPI_BASE_DIR "${MPI_CXX_INCLUDE_DIRS}")
-endif()
-
 set(TRILINOS_OPTION_ARGS
     -DTrilinos_ENABLE_TESTS=OFF
     -DTrilinos_ENABLE_EXAMPLES=OFF
@@ -57,8 +52,19 @@ if(OOMPH_ENABLE_MPI)
   if(NOT MPI_CXX_INCLUDE_DIRS)
     message(FATAL_ERROR "Requested MPI but MPI_CXX_INCLUDE_DIRS is not set!")
   endif()
-  list(APPEND TRILINOS_OPTION_ARGS -DMPI_BASE_DIR="${MPI_CXX_INCLUDE_DIRS}")
+
+  # Have to be careful to concatenate multi-path arguments into a semicolon
+  # separated string before passing it to ExternalProject
+  list(JOIN MPI_CXX_INCLUDE_DIRS $<SEMICOLON> MPI_BASE_DIR)
+  list(APPEND TRILINOS_OPTION_ARGS -DMPI_BASE_DIR=${MPI_BASE_DIR})
 endif()
+
+# oomph_get_external_project_helper( PROJECT_NAME trilinos URL
+# "${TRILINOS_TARBALL_URL}" INSTALL_DIR "${TRILINOS_INSTALL_DIR}"
+# CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR>
+# -G=${CMAKE_GENERATOR} ${TRILINOS_OPTION_ARGS} -B=build BUILD_COMMAND cmake
+# --build build INSTALL_COMMAND cmake --install build TEST_COMMAND ""
+# INSTALL_BYPRODUCTS "")
 
 # Define how to configure/build/install the project
 ExternalProject_Add(
@@ -67,15 +73,19 @@ ExternalProject_Add(
   INSTALL_DIR "${TRILINOS_INSTALL_DIR}"
   LOG_DIR "${CMAKE_BINARY_DIR}/logs"
   BUILD_IN_SOURCE TRUE
-  # LOG_UPDATE TRUE LOG_DOWNLOAD TRUE LOG_CONFIGURE TRUE LOG_BUILD TRUE
-  # LOG_INSTALL TRUE LOG_TEST TRUE LOG_MERGED_STDOUTERR TRUE
+  LOG_UPDATE TRUE
+  LOG_DOWNLOAD TRUE
+  LOG_CONFIGURE TRUE
+  LOG_BUILD TRUE
+  LOG_INSTALL TRUE
+  LOG_TEST TRUE
+  LOG_MERGED_STDOUTERR TRUE
   LOG_OUTPUT_ON_FAILURE TRUE
   UPDATE_DISCONNECTED TRUE
   BUILD_ALWAYS FALSE
   CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR>
                     -G=${CMAKE_GENERATOR} ${TRILINOS_OPTION_ARGS} -B=build
   BUILD_COMMAND cmake --build build
-  INSTALL_COMMAND cmake --install build
-  TEST_COMMAND "" INSTALL_BYPRODUCTS "")
+  INSTALL_COMMAND cmake --install build)
 
 # ---------------------------------------------------------------------------------
