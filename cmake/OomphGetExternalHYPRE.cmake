@@ -58,7 +58,7 @@ oomph_get_external_project_helper(
     -DTPL_BLAS_LIBRARIES=${OpenBLAS_LIBRARIES}
     -DTPL_LAPACK_LIBRARIES=${OpenBLAS_LIBRARIES}
     -B=src/cmbuild
-  BUILD_COMMAND cmake --build src/cmbuild
+  BUILD_COMMAND cmake --build src/cmbuild -j ${NUM_THREADS_FOR_PARALLEL_MAKE}
   INSTALL_COMMAND cmake --install src/cmbuild
   TEST_COMMAND ""
   INSTALL_BYPRODUCTS "")

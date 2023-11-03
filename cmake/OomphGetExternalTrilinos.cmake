@@ -53,39 +53,55 @@ if(OOMPH_ENABLE_MPI)
     message(FATAL_ERROR "Requested MPI but MPI_CXX_INCLUDE_DIRS is not set!")
   endif()
 
-  # Have to be careful to concatenate multi-path arguments into a semicolon
-  # separated string before passing it to ExternalProject
-  list(JOIN MPI_CXX_INCLUDE_DIRS $<SEMICOLON> MPI_BASE_DIR)
+  # ARGH this doesn't work. Can't seem to pass multiple include paths. Will just
+  # take the first path Have to be careful to concatenate multi-path arguments
+  # into a semicolon separated string before passing it to ExternalProject
+  # string(JOIN $<SEMICOLON> MPI_BASE_DIR ${MPI_CXX_INCLUDE_DIRS})
+
+  # Default to first entry of MPI_CXX_INCLUDE_DIRS as base directory
+  list(GET MPI_CXX_INCLUDE_DIRS 0 MPI_BASE_DIR)
+
+  # Loop over the include directories, look at its parent directory to see
+  # whether it has the required bin/, include/, and lib/ dirs. Would prefer to
+  # just pass MPI_CXX_INCLUDE_DIRS but there appear to be issues with making
+  # sure multiple path values are interpreted correctly.
+  foreach(MPI_INCLUDE_DIR IN LISTS MPI_CXX_INCLUDE_DIRS)
+    cmake_path(GET MPI_INCLUDE_DIR PARENT_PATH MPI_DIR)
+    message(STATUS "Checking if ${MPI_DIR} is the root MPI directory")
+
+    # See if it has an include/ and lib/ directory (and optionally a bin/
+    # directory)
+    if((EXISTS "${MPI_DIR}/include") AND (EXISTS "${MPI_DIR}/lib"))
+      set(MPI_BASE_DIR ${MPI_DIR})
+      message(STATUS "Found base MPI directory: ${MPI_BASE_DIR}")
+      if(EXISTS "${MPI_DIR}/bin")
+        message(STATUS "Yay! It also contains a bin/ directory!")
+      endif()
+      break()
+    else()
+      message(
+        STATUS "Couldn't find root MPI directory from MPI_CXX_INCLUDE_DIRS.")
+      message(
+        STATUS "For Trilinos I will default to: -DMPI_BASE_DIR=${MPI_BASE_DIR}")
+    endif()
+  endforeach()
+
+  # Now append to the full list of arguments
   list(APPEND TRILINOS_OPTION_ARGS -DMPI_BASE_DIR=${MPI_BASE_DIR})
 endif()
 
-# oomph_get_external_project_helper( PROJECT_NAME trilinos URL
-# "${TRILINOS_TARBALL_URL}" INSTALL_DIR "${TRILINOS_INSTALL_DIR}"
-# CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR>
-# -G=${CMAKE_GENERATOR} ${TRILINOS_OPTION_ARGS} -B=build BUILD_COMMAND cmake
-# --build build INSTALL_COMMAND cmake --install build TEST_COMMAND ""
-# INSTALL_BYPRODUCTS "")
-
 # Define how to configure/build/install the project
-ExternalProject_Add(
-  trilinos
+oomph_get_external_project_helper(
+  PROJECT_NAME trilinos
   URL "${TRILINOS_TARBALL_URL}"
   INSTALL_DIR "${TRILINOS_INSTALL_DIR}"
-  LOG_DIR "${CMAKE_BINARY_DIR}/logs"
-  BUILD_IN_SOURCE TRUE
-  LOG_UPDATE TRUE
-  LOG_DOWNLOAD TRUE
-  LOG_CONFIGURE TRUE
-  LOG_BUILD TRUE
-  LOG_INSTALL TRUE
-  LOG_TEST TRUE
-  LOG_MERGED_STDOUTERR TRUE
-  LOG_OUTPUT_ON_FAILURE TRUE
-  UPDATE_DISCONNECTED TRUE
-  BUILD_ALWAYS FALSE
   CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR>
                     -G=${CMAKE_GENERATOR} ${TRILINOS_OPTION_ARGS} -B=build
-  BUILD_COMMAND cmake --build build
-  INSTALL_COMMAND cmake --install build)
+  BUILD_COMMAND ${CMAKE_COMMAND} --build build -j
+                ${NUM_THREADS_FOR_PARALLEL_MAKE}
+  INSTALL_COMMAND ${CMAKE_COMMAND} --install build
+  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j
+               ${NUM_THREADS_FOR_PARALLEL_MAKE}
+  INSTALL_BYPRODUCTS "")
 
 # ---------------------------------------------------------------------------------
