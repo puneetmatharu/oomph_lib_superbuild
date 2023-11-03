@@ -34,7 +34,6 @@ oomph_get_external_project_helper(
     ${CMAKE_COMMAND}
     --install-prefix=<INSTALL_DIR>
     -G=${CMAKE_GENERATOR}
-    -B=build
     -Dgemmt=ON
     -Dparallel=${OOMPH_ENABLE_MPI}
     -Dintsize64=OFF
@@ -50,6 +49,7 @@ oomph_get_external_project_helper(
     -DBUILD_DOUBLE=ON
     -DBUILD_COMPLEX=OFF
     -DBUILD_COMPLEX16=OFF
+    -B=build
   BUILD_COMMAND cmake --build build
   INSTALL_COMMAND cmake --install build
   TEST_COMMAND ""
