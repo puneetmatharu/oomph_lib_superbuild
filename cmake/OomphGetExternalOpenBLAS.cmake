@@ -42,7 +42,7 @@ oomph_get_external_project_helper(
 
 # Define OpenBLAS_LIBRARIES for HYPRE and Trilinos to use
 set(OpenBLAS_LIBNAME
-    "${CMAKE_STATIC_LIBRARY_PREFIX}openblas${CMAKE_STATIC_LIBRARY_SUFFIX})")
+    "${CMAKE_STATIC_LIBRARY_PREFIX}openblas${CMAKE_STATIC_LIBRARY_SUFFIX}")
 set(OpenBLAS_LIBRARIES "${OPENBLAS_INSTALL_DIR}/lib/${OpenBLAS_LIBNAME}" CACHE
     PATH "" FORCE)
 

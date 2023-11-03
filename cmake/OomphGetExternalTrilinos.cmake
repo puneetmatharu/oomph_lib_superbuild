@@ -54,11 +54,13 @@ set(TRILINOS_OPTION_ARGS
     -DTPL_ENABLE_MPI=${OOMPH_ENABLE_MPI})
 
 if(OOMPH_ENABLE_MPI)
-  if(NOT MPI_BASE_DIR)
-    message(FATAL_ERROR "Requested MPI but MPI_BASE_DIR is not set!")
+  if(NOT MPI_CXX_INCLUDE_DIRS)
+    message(FATAL_ERROR "Requested MPI but MPI_CXX_INCLUDE_DIRS is not set!")
   endif()
-  list(APPEND TRILINOS_OPTION_ARGS -DMPI_BASE_DIR=${MPI_BASE_DIR})
+  list(APPEND TRILINOS_OPTION_ARGS -DMPI_BASE_DIR=${MPI_CXX_INCLUDE_DIRS})
 endif()
+
+message(WARNING "TRILINOS_OPTION_ARGS: ${TRILINOS_OPTION_ARGS}")
 
 oomph_get_external_project_helper(
   PROJECT_NAME trilinos
