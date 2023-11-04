@@ -22,8 +22,9 @@
 # cmake-format: on
 cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 project(
-  oomph_lib_third_party_libraries
-  DESCRIPTION "Helps build third-party libraries that can be used by oomph-lib."
+  oomph_lib_superbuild
+  DESCRIPTION
+    "A wrapper to oomph-lib that can also build third-party libraries."
   VERSION 0.0.1
   HOMEPAGE_URL "https://oomph-lib.github.io/oomph-lib/doc/html/"
   LANGUAGES C CXX Fortran)
