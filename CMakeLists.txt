@@ -53,16 +53,16 @@ set(CMAKE_MESSAGE_LOG_LEVEL VERBOSE)
 
 # ------------------------------[ BUILD OPTIONS ]-------------------------------
 # cmake-format: off
-include(OomphPathOption)
+include(OomphOptions)
 
 # Boolean options
-option(OOMPH_ENABLE_MPI "Build third-party libraries with MPI support?" OFF)
-option(OOMPH_BUILD_OPENBLAS "Build OpenBLAS?" ON)
-option(OOMPH_BUILD_CGAL "Build CGAL?" ON)
-option(OOMPH_BUILD_MUMPS "Build MUMPS?" ON)
-option(OOMPH_BUILD_HYPRE "Build Hypre?" ON)
-option(OOMPH_BUILD_TRILINOS "Build Trilinos?" ON)
-option(OOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTS "Disable testing when building the third-party libraries?" OFF)
+oomph_option(OOMPH_ENABLE_MPI "Build third-party libraries with MPI support?" OFF)
+oomph_option(OOMPH_BUILD_OPENBLAS "Build OpenBLAS?" FALSE)
+oomph_option(OOMPH_BUILD_CGAL "Build CGAL?" ON)
+oomph_option(OOMPH_BUILD_MUMPS "Build MUMPS?" FALSE)
+oomph_option(OOMPH_BUILD_HYPRE "Build Hypre?" FALSE)
+oomph_option(OOMPH_BUILD_TRILINOS "Build Trilinos?" FALSE)
+oomph_option(OOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTS "Disable testing when building the third-party libraries?" OFF)
 
 # Path-like flags
 oomph_path_option(
@@ -137,31 +137,53 @@ endif()
 
 # ----------------------------------[ CGAL ]-----------------------------------
 
-# FIXME: Currently only works on macOS if "CC=gcc CXX=g++" is passed to CMake
-if(OOMPH_USE_CGAL_FROM)
-  if((NOT OOMPH_USE_GMP_FROM)
-     OR (NOT OOMPH_USE_MPFR_FROM)
-     OR (NOT OOMPH_USE_BOOST_FROM))
-    message(
-      FATAL_ERROR
-        "If you define OOMPH_USE_CGAL_FROM, you must also define OOMPH_USE_GMP_FROM, OOMPH_USE_MPFR_FROM and OOMPH_USE_BOOST_FROM!"
-    )
+# FIXME: Build of CGAL only works on macOS Sonoma Developer Beta if "CC=gcc
+# CXX=g++" is passed to CMake
+
+# If we're given CGAL or need to build it
+if(OOMPH_USE_CGAL_FROM OR OOMPH_BUILD_CGAL)
+  # If we're given GMP
+  if(OOMPH_USE_GMP_FROM)
+    find_package(GMP REQUIRED)
   endif()
 
-  # NOTE: FindGMP and FindMPFR will read the values of OOMPH_USE_GMP_FROM and
-  # OOMPH_USE_MPFR_FROM
-  find_package(GMP REQUIRED)
-  find_package(MPFR REQUIRED)
-  find_package(
-    Boost 1.83.0 REQUIRED
-    PATHS ${OOMPH_USE_BOOST_FROM}
-    NO_DEFAULT_PATH)
-  find_package(
-    CGAL 5.6 REQUIRED
-    PATHS ${OOMPH_USE_CGAL_FROM}
-    NO_DEFAULT_PATH)
-elseif(OOMPH_BUILD_CGAL)
-  include(OomphGetExternalCGAL)
+  # If we're given MPFR
+  if(OOMPH_USE_MPFR_FROM)
+    find_package(MPFR REQUIRED)
+  endif()
+
+  # If we're given Boost
+  if(OOMPH_USE_BOOST_FROM)
+    find_package(
+      Boost 1.83.0 REQUIRED
+      PATHS ${OOMPH_USE_BOOST_FROM}
+      NO_DEFAULT_PATH)
+  endif()
+
+  # If we're given CGAL
+  if(OOMPH_USE_CGAL_FROM)
+    find_package(
+      CGAL 5.6 REQUIRED
+      PATHS ${OOMPH_USE_CGAL_FROM}
+      NO_DEFAULT_PATH)
+  elseif(OOMPH_BUILD_CGAL)
+    include(OomphGetExternalCGAL)
+    set(GMP_FOUND TRUE)
+    set(MPFR_FOUND TRUE)
+    set(BOOST_FOUND TRUE)
+    set(CGAL_FOUND TRUE)
+  endif()
+
+  # Make sure we have everything we need
+  if(NOT GMP_FOUND)
+    message(FATAL_ERROR "Unable to locate GMP!")
+  elseif(NOT MPFR_FOUND)
+    message(FATAL_ERROR "Unable to locate MPFR!")
+  elseif(NOT BOOST_FOUND)
+    message(FATAL_ERROR "Unable to locate Boost!")
+  elseif(NOT CGAL_FOUND)
+    message(FATAL_ERROR "Unable to locate CGAL!")
+  endif()
 endif()
 
 # ----------------------------------[ MUMPS ]----------------------------------
@@ -202,5 +224,10 @@ elseif(OOMPH_BUILD_TRILINOS)
   endif()
   include(OomphGetExternalTrilinos)
 endif()
+
+# ----------------------------[ DOC CONFIGURATION ]----------------------------
+
+include(OomphDocProjectSettings)
+oomph_doc_project_settings()
 
 # -----------------------------------------------------------------------------

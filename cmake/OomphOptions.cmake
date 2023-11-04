@@ -6,6 +6,8 @@
 # USAGE:
 # ------
 #
+#   oomph_option(OOMPH_ENABLE_MPI "Enable the use of MPI for parallel processing" OFF)
+#
 #   oomph_path_option(
 #     FLAG OOMPH_THIRD_PARTY_INSTALL_DIR
 #     DEFAULT "${CMAKE_CURRENT_LIST_DIR}/install"
@@ -16,6 +18,16 @@
 # cmake-format: on
 include_guard()
 include(CMakeParseArguments)
+
+# ------------------------------------------------------------------------------
+# cmake-format: off
+function(oomph_option VAR DOCSTRING VALUE)
+  option(${VAR} "${DOCSTRING}" ${VALUE})
+  set(OOMPH_CONFIG_VARS ${OOMPH_CONFIG_VARS} ${VAR} CACHE INTERNAL
+      "List of oomph-lib configuration options" FORCE)
+endfunction()
+# cmake-format: on
+# ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
 function(oomph_path_option)
