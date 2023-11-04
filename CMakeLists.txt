@@ -22,47 +22,15 @@
 # cmake-format: on
 cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 project(
-  third_party_libraries_for_oomph-lib
+  oomph_lib_third_party_libraries
   DESCRIPTION "Helps build third-party libraries that can be used by oomph-lib."
   VERSION 0.0.1
   HOMEPAGE_URL "https://oomph-lib.github.io/oomph-lib/doc/html/"
   LANGUAGES C CXX Fortran)
 
-# ------------------------------[ BUILD OPTIONS ]-------------------------------
-
-option(OOMPH_ENABLE_MPI "Build third-party libraries with MPI support?" OFF)
-option(OOMPH_BUILD_OPENBLAS "Build OpenBLAS?" OFF)
-option(OOMPH_BUILD_CGAL "Build CGAL?" OFF)
-option(OOMPH_BUILD_MUMPS "Build MUMPS?" OFF)
-option(OOMPH_BUILD_HYPRE "Build Hypre?" OFF)
-option(OOMPH_BUILD_TRILINOS "Build Trilinos?" OFF)
-
-# cmake-format: off
-# ------------------------------------------------------------------------------
-function(oomph_path_option VAR DOCSTRING VALUE)
-  set(${VAR} ${VALUE} CACHE PATH "${DOCSTRING}")
-  set(OOMPH_CONFIG_VARS ${OOMPH_CONFIG_VARS} ${VAR} CACHE INTERNAL
-    "List of oomph-lib configuration options" FORCE)
-endfunction()
-# ------------------------------------------------------------------------------
-
-# Paths to packages that the user has installed themselves
-oomph_path_option(OOMPH_USE_MPI_FROM "Path to MPI installation" "${OOMPH_USE_MPI_FROM}")
-# oomph_path_option(OOMPH_USE_GMSH_FROM "Path to 'gmsh' executable" "${OOMPH_USE_GMSH_FROM}")
-oomph_path_option(OOMPH_USE_OPENBLAS_FROM "Path to OpenBLAS installation" "${OOMPH_USE_OPENBLAS_FROM}")
-# oomph_path_option(OOMPH_USE_LAPACK_FROM "Path to LAPACK installation" "${OOMPH_USE_LAPACK_FROM}")
-oomph_path_option(OOMPH_USE_GMP_FROM "Path to GMP installation" "${OOMPH_USE_GMP_FROM}")
-oomph_path_option(OOMPH_USE_MPFR_FROM "Path to MPFR installation" "${OOMPH_USE_MPFR_FROM}")
-oomph_path_option(OOMPH_USE_BOOST_FROM "Path to Boost installation" "${OOMPH_USE_BOOST_FROM}")
-oomph_path_option(OOMPH_USE_CGAL_FROM "Path to CGAL installation" "${OOMPH_USE_CGAL_FROM}")
-oomph_path_option(OOMPH_USE_MUMPS_FROM "Path to MUMPS installation" "${OOMPH_USE_MUMPS_FROM}")
-oomph_path_option(OOMPH_USE_HYPRE_FROM "Path to Hypre installation" "${OOMPH_USE_HYPRE_FROM}")
-oomph_path_option(OOMPH_USE_TRILINOS_FROM "Path to Trilinos installation" "${OOMPH_USE_TRILINOS_FROM}")
-
-# cmake-format: on
 # ---------------------------[ INITIAL PROJECT SETUP ]--------------------------
 
-# To handle timestamps when downloading archives via ExternalProject
+# Handle warning about timestamps when downloading archives via ExternalProject
 cmake_policy(SET CMP0135 NEW)
 
 # Specify the location of non-standard CMake modules
@@ -81,6 +49,26 @@ endif()
 # Select level of verbosity (e.g. STATUS, VERBOSE, etc.)
 set(CMAKE_MESSAGE_LOG_LEVEL VERBOSE)
 
+# ------------------------------[ BUILD OPTIONS ]-------------------------------
+# cmake-format: off
+include(OomphPathOption)
+
+# Boolean options
+option(OOMPH_ENABLE_MPI "Build third-party libraries with MPI support?" OFF)
+option(OOMPH_BUILD_OPENBLAS "Build OpenBLAS?" ON)
+option(OOMPH_BUILD_CGAL "Build CGAL?" ON)
+option(OOMPH_BUILD_MUMPS "Build MUMPS?" ON)
+option(OOMPH_BUILD_HYPRE "Build Hypre?" ON)
+option(OOMPH_BUILD_TRILINOS "Build Trilinos?" ON)
+
+# Path-like flags
+oomph_path_option(
+  FLAG OOMPH_THIRD_PARTY_INSTALL_DIR
+  DEFAULT "${CMAKE_CURRENT_LIST_DIR}/install"
+  DOCSTRING "Base installation directory for third-party libraries."
+)
+
+# cmake-format: on
 # ----------------------[ FIND REQUIRED/DESIRED PACKAGES ]----------------------
 
 # Use CMake built-in modules to search for certain packages
@@ -116,7 +104,6 @@ endif()
 # Where to download files from and where to install to
 set(OOMPH_THIRD_PARTY_TAR_FILE_URL
     "https://www.matthias-heil.co.uk/oomph-lib_third_party_tar_files")
-set(OOMPH_THIRD_PARTY_INSTALL_DIR ${CMAKE_CURRENT_LIST_DIR}/install)
 
 # ----------------------------------[ MPI ]------------------------------------
 
@@ -135,11 +122,11 @@ endif()
 
 # --------------------------------[ OPENBLAS ]---------------------------------
 
+# FIXME: OpenBLAS doesn't build on macOS Sonoma beta 14.2. Expecting OpenBLAS
+# 0.3.24 to be installed via Homebrew for now...
 if(OOMPH_USE_OPENBLAS_FROM)
   find_package(OpenBLAS 0.3.24 REQUIRED PATHS ${OOMPH_USE_OPENBLAS_FROM})
 elseif(APPLE)
-  # FIXME: OpenBLAS doesn't build on macOS Sonoma beta 14.2. Expecting OpenBLAS
-  # 0.3.24 to be installed via Homebrew for now...
   find_package(OpenBLAS REQUIRED PATHS /opt/homebrew/Cellar/openblas/0.3.24/)
 elseif(OOMPH_BUILD_OPENBLAS)
   include(OomphGetExternalOpenBLAS)
