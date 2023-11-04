@@ -14,7 +14,7 @@ Note that we do not need an install step; this is because we only build/install 
 ## Build options
 
 Option                                      | Description                                                | Default
---------------------------------------------|------------------------------------------------------------|--------
+--------------------------------------------|------------------------------------------------------------|-----------------------------
 `OOMPH_ENABLE_MPI`                          | *Enable MPI support?*                                      | `OFF`
 `OOMPH_BUILD_CGAL`                          | *Build CGAL (with deps. GMP, MPFR and Boost)?*             | `ON`
 `OOMPH_BUILD_OPENBLAS`                      | *Build OpenBLAS?*                                          | `ON`
@@ -22,6 +22,7 @@ Option                                      | Description                       
 `OOMPH_BUILD_HYPRE`                         | *Build Hypre?*                                             | `ON`
 `OOMPH_BUILD_TRILINOS`                      | *Build Trilinos?*                                          | `ON`
 `OOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTING` | *Disable testing when building the third-party libraries?* | `OFF`
+`OOMPH_THIRD_PARTY_INSTALL_DIR`             | *Base installation directory for third-party libraries.*   | `<project_root>/install/`
 
 ### Extended example
 
