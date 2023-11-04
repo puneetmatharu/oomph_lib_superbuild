@@ -43,8 +43,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 # Build in Release (fully optimised) mode by default
-if(NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
+if((NOT CMAKE_BUILD_TYPE) OR (NOT DEFINED ENV{CMAKE_BUILD_TYPE}))
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+      "Build in Release mode for improved runtime performance.")
 endif()
 
 # Select level of verbosity (e.g. STATUS, VERBOSE, etc.)
