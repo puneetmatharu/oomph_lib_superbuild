@@ -52,6 +52,11 @@ function(oomph_get_external_project_helper)
     set(CONFIGURE_HANDLED_BY_BUILD TRUE)
   endif()
 
+  # If we want to disable tests, we just won't specify a test command to ExternalProject
+  if(OOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTS)
+    set(TEST_COMMAND)
+  endif()
+
   # Define how to configure/build/install the project
   ExternalProject_Add(
     ${PROJECT_NAME}

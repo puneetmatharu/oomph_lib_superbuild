@@ -62,6 +62,7 @@ option(OOMPH_BUILD_CGAL "Build CGAL?" ON)
 option(OOMPH_BUILD_MUMPS "Build MUMPS?" ON)
 option(OOMPH_BUILD_HYPRE "Build Hypre?" ON)
 option(OOMPH_BUILD_TRILINOS "Build Trilinos?" ON)
+option(OOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTS "Disable testing when building the third-party libraries?" OFF)
 
 # Path-like flags
 oomph_path_option(
