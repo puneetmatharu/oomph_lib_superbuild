@@ -32,7 +32,9 @@ project(
 # ---------------------------[ INITIAL PROJECT SETUP ]--------------------------
 
 # Handle warning about timestamps when downloading archives via ExternalProject
-cmake_policy(SET CMP0135 NEW)
+if(POLICY CMP0135)
+  cmake_policy(SET CMP0135 OLD)
+endif()
 
 # Specify the location of non-standard CMake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
