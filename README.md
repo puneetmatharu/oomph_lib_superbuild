@@ -46,8 +46,3 @@ Since, by default, we want to build all of the third-party libraries, you can ac
 >>> cmake -G Ninja -DOOMPH_ENABLE_MPI=ON -DOOMPH_BUILD_MUMPS=OFF -DOOMPH_BUILD_HYPRE=OFF -DOOMPH_BUILD_TRILINOS=OFF -DOOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTS=ON -B build
 >>> cmake --build build
 ```
-
-## TODOs
-
-- Combine with main project to form superbuild.
-- Decide whether to keep `OOMPH_USE_*_FROM` options or remove
