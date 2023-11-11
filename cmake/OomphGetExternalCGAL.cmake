@@ -125,9 +125,16 @@ oomph_get_external_project_helper(
 
 # -----------------------------------------------------------------------------
 
-# MPFR relies on GMP, and CGAL relies on GMP, MPFR and Boost
-add_dependencies(mpfr gmp)
-add_dependencies(cgal gmp mpfr boost)
+# MPFR relies on GMP, and CGAL relies on GMP, MPFR and Boost. We have to be
+# careful to only define target dependencies if we're building the libraries
+# ourselves
+if((TARGET gmp) AND (TARGET mpfr))
+  add_dependencies(mpfr gmp)
+  add_dependencies(cgal gmp mpfr)
+endif()
+if(TARGET boost)
+  add_dependencies(cgal boost)
+endif()
 
 # -----------------------------------------------------------------------------
 # cmake-format: on
