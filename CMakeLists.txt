@@ -60,9 +60,9 @@ include(OomphOptions)
 # Boolean options
 oomph_option(OOMPH_ENABLE_MPI "Build third-party libraries with MPI support?" OFF)
 oomph_option(OOMPH_BUILD_OPENBLAS "Build OpenBLAS?" ON)
-oomph_option(OOMPH_BUILD_CGAL "Build CGAL?" ON)
-oomph_option(OOMPH_BUILD_MUMPS "Build MUMPS?" ON)
-oomph_option(OOMPH_BUILD_HYPRE "Build Hypre?" ON)
+oomph_option(OOMPH_BUILD_CGAL "Build CGAL?" OFF)
+oomph_option(OOMPH_BUILD_MUMPS "Build MUMPS?" OFF)
+oomph_option(OOMPH_BUILD_HYPRE "Build Hypre?" OFF)
 oomph_option(OOMPH_BUILD_TRILINOS "Build Trilinos?" ON)
 oomph_option(OOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTS "Disable testing when building the third-party libraries?" OFF)
 
