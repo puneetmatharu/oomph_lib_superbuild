@@ -66,7 +66,7 @@ function(oomph_path_option)
     set(${FLAG} ${${FLAG}} CACHE PATH "${DOCSTRING}")
   elseif(DEFAULT)
     set(${FLAG} ${DEFAULT} CACHE PATH "${DOCSTRING}")
-  else(IS_REQUIRED)
+  elseif(IS_REQUIRED)
     message(
       FATAL_ERROR
         "Argument '${FLAG}' is required but you did not specify a value! Set it using -D${FLAG}=\"...\" at the commandline."
