@@ -2,6 +2,7 @@
 
 CGAL_ROOT_DIR=$1
 LOG_DIR=$2
+BUILD_OPTIONS="${@:3}"
 
 echo "Entering CGAL root directory: ${CGAL_ROOT_DIR}"
 cd ${CGAL_ROOT_DIR}
@@ -32,8 +33,8 @@ fi
 
 # Configure
 echo "Building CGAL test with compiler_spec_string: "$compiler_spec_string
-echo "Building CGAL test with build_opts: "$build_opts
-echo $compiler_spec_string" cmake -DCGAL_DIR=.. -DCMAKE_BUILD_TYPE=Release $build_opts .  2>&1 >> ${LOG_DIR}/build.log" >.full_build_file
+echo "Building CGAL test with build_opts: ${BUILD_OPTIONS}"
+echo $compiler_spec_string" cmake -DCGAL_DIR=.. ${BUILD_OPTIONS} . 2>&1 >> ${LOG_DIR}/build.log" >.full_build_file
 source .full_build_file
 
 # Build
@@ -49,6 +50,7 @@ if [ ! -e ./nearest_neighbor_searching ]; then
     echo "    examples/Spatial_searching/"
     echo " "
     echo "failed to build. Check ${LOG_DIR}/build.log!"
+    exit 1
 else
     echo "Yay! CGAL test code "
     echo " "
@@ -56,7 +58,6 @@ else
     echo " "
     echo "which was copied from examples/Spatial_searching/"
     echo "was built!"
-    # run
     output=$(./nearest_neighbor_searching)
     echo " "
     if [ "$output" != "0 0 0" ]; then
