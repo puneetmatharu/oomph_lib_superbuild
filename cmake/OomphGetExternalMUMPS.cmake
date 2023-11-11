@@ -50,11 +50,9 @@ oomph_get_external_project_helper(
     -DBUILD_COMPLEX=OFF
     -DBUILD_COMPLEX16=OFF
     -B=build
-  BUILD_COMMAND ${CMAKE_COMMAND} --build build -j
-                ${NUM_THREADS_FOR_PARALLEL_MAKE}
+  BUILD_COMMAND ${CMAKE_COMMAND} --build build -j ${NUM_JOBS}
   INSTALL_COMMAND ${CMAKE_COMMAND} --install build
-  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j
-               ${NUM_THREADS_FOR_PARALLEL_MAKE}
+  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS}
   INSTALL_BYPRODUCTS "")
 
 # ---------------------------------------------------------------------------------

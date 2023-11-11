@@ -94,16 +94,15 @@ include(OomphGetExternalProjectHelper)
 
 # Decide on number of jobs to use for building projects
 ProcessorCount(NUM_PROCESSOR)
-set(NUM_THREADS_FOR_PARALLEL_MAKE 1)
+set(NUM_JOBS 1)
 if(NUM_PROCESSOR EQUAL 0)
   message(
     WARNING
       "Encountered error trying to determine the number of available CPU cores. Will build Makefile-based projects with just 1 job."
   )
 else()
-  set(NUM_THREADS_FOR_PARALLEL_MAKE ${NUM_PROCESSOR})
-  message(
-    STATUS "Number of jobs for parallel make: ${NUM_THREADS_FOR_PARALLEL_MAKE}")
+  set(NUM_JOBS ${NUM_PROCESSOR})
+  message(STATUS "Number of jobs for parallel make: ${NUM_JOBS}")
 endif()
 
 # Where to download files from and where to install to
@@ -203,7 +202,7 @@ endif()
 
 if(OOMPH_USE_HYPRE_FROM)
   find_package(
-    HYPRE 2.29.0 REQUIRED
+    HYPRE 2.30.0 REQUIRED
     PATHS ${OOMPH_USE_HYPRE_FROM}
     NO_DEFAULT_PATH)
 elseif(OOMPH_BUILD_HYPRE)
