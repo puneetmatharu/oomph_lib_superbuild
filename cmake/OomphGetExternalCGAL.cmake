@@ -116,7 +116,7 @@ oomph_get_external_project_helper(
   URL "${CGAL_TARBALL_URL}"
   INSTALL_DIR ${CGAL_INSTALL_DIR}
   PATCH_COMMAND ${CMAKE_CURRENT_LIST_DIR}/patches/patch_cgal.sh <SOURCE_DIR>
-  CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR> -B=build
+  CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR> -G=${CMAKE_GENERATOR} -B=build
   BUILD_COMMAND ${CMAKE_COMMAND} --build build --parallel ${NUM_JOBS}
   INSTALL_COMMAND ${CMAKE_COMMAND} --install build
   TEST_COMMAND ${CMAKE_CURRENT_LIST_DIR}/scripts/run_cgal_self_test.sh <SOURCE_DIR> <LOG_DIR> ${CGAL_CMAKE_BUILD_ARGS_FOR_SELF_TEST})

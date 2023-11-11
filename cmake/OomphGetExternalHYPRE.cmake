@@ -26,17 +26,7 @@ set(HYPRE_TARBALL_URL
 set(HYPRE_INSTALL_DIR "${OOMPH_THIRD_PARTY_INSTALL_DIR}/hypre")
 
 # Hypre build options
-
-# Define how to configure/build/install the project
-oomph_get_external_project_helper(
-  PROJECT_NAME hypre
-  URL "${HYPRE_TARBALL_URL}"
-  INSTALL_DIR "${HYPRE_INSTALL_DIR}"
-  CONFIGURE_COMMAND
-    ${CMAKE_COMMAND}
-    --install-prefix=<INSTALL_DIR>
-    -G=${CMAKE_GENERATOR}
-    -S=src
+set(HYPRE_CMAKE_BUILD_ARGS
     -DHYPRE_ENABLE_SHARED=OFF
     -DHYPRE_ENABLE_BIGINT=OFF
     -DHYPRE_ENABLE_MIXEDINT=OFF
@@ -56,8 +46,16 @@ oomph_get_external_project_helper(
     -DTPL_ENABLE_BLAS=ON
     -DTPL_ENABLE_LAPACK=ON
     -DTPL_BLAS_LIBRARIES=${OpenBLAS_LIBRARIES}
-    -DTPL_LAPACK_LIBRARIES=${OpenBLAS_LIBRARIES}
-    -B=src/cmbuild
+    -DTPL_LAPACK_LIBRARIES=${OpenBLAS_LIBRARIES})
+
+# Define how to configure/build/install the project
+oomph_get_external_project_helper(
+  PROJECT_NAME hypre
+  URL "${HYPRE_TARBALL_URL}"
+  INSTALL_DIR "${HYPRE_INSTALL_DIR}"
+  CONFIGURE_COMMAND
+    ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR> ${HYPRE_CMAKE_BUILD_ARGS}
+    -G=${CMAKE_GENERATOR} -S=src -B=src/cmbuild
   BUILD_COMMAND cmake --build src/cmbuild -j ${NUM_JOBS}
   INSTALL_COMMAND cmake --install src/cmbuild
   TEST_COMMAND ""
