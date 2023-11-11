@@ -142,8 +142,6 @@ endif()
 
 # --------------------------------[ OPENBLAS ]---------------------------------
 
-# FIXME: OpenBLAS doesn't build on macOS Sonoma beta 14.2. Expecting OpenBLAS
-# 0.3.24 to be installed via Homebrew for now...
 if(OOMPH_USE_OPENBLAS_FROM)
   find_package(OpenBLAS 0.3.24 REQUIRED PATHS ${OOMPH_USE_OPENBLAS_FROM})
 elseif(OOMPH_BUILD_OPENBLAS)
@@ -151,9 +149,6 @@ elseif(OOMPH_BUILD_OPENBLAS)
 endif()
 
 # ----------------------------------[ CGAL ]-----------------------------------
-
-# FIXME: Build of CGAL only works on macOS Sonoma Developer Beta if "CC=gcc
-# CXX=g++" is passed to CMake
 
 # If we're given CGAL or need to build it
 if(OOMPH_BUILD_CGAL)

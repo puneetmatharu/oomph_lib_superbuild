@@ -11,17 +11,9 @@
 # =============================================================================
 # cmake-format: on
 
-# FIXME: DON'T USE THIS VERSION FOR THE FINAL PROJECT! USE THE ONE WITH THE MAIN
-# PROJECT!
-
 # ------------------------------------------------------------------------------
 function(oomph_check_mpi)
-  # Requires CMake 3.19: include(CheckSourceCompiles)
   include(CheckCXXSourceRuns)
-
-  # TODO: I have a feeling I should be using the MPI_C library instead. Find out
-  # then come back and change the code below accordingly. See TOOD-LIST.md.
-
   set(CMAKE_REQUIRED_INCLUDES)
   set(CMAKE_REQUIRED_FLAGS)
   set(CMAKE_REQUIRED_LIBRARIES MPI::MPI_CXX)
@@ -48,7 +40,7 @@ function(oomph_check_mpi)
     OOMPH_MPI_CXX_WORKS)
 
   if(NOT OOMPH_MPI_CXX_WORKS)
-    message(FATAL_ERROR "MPI_CXX not working.")
+    message(FATAL_ERROR "MPI_CXX didn't work!")
   endif()
 endfunction()
 # ------------------------------------------------------------------------------
@@ -65,26 +57,4 @@ if(NOT MPI_FOUND)
   oomph_check_mpi()
 endif()
 
-# Define a cache variable that can be overriden by the user from the
-# command-line
-set(OOMPH_MPI_NUM_PROC 2 CACHE INTERNAL
-    "Number of processes to use with MPI-enabled tests")
-
-# Set the command used to run MPI-enabled self-tests
-if(NOT DEFINED OOMPH_MPI_RUN_COMMAND)
-  set(OOMPH_MPI_RUN_COMMAND
-      "${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${OOMPH_MPI_NUM_PROC}")
-endif()
-
-# Set the more complex command used to run MPI-enabled self-tests with a
-# variable number of processes. The user can sed replace 'OOMPHNP' with the
-# number of processes they wish to use
-if(NOT DEFINED OOMPH_MPI_VARIABLENP_RUN_COMMAND)
-  set(OOMPH_MPI_VARIABLENP_RUN_COMMAND
-      "${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} OOMPHNP ")
-endif()
-
-# Add a preprocessor definition and a CMake cache variable to indicate that MPI
-# is available and works (if oomph_check_mpi() ran)
-set(OOMPH_HAS_MPI TRUE CACHE INTERNAL "")
 # ------------------------------------------------------------------------------
