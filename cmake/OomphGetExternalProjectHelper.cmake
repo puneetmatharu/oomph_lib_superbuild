@@ -75,7 +75,7 @@ function(oomph_get_external_project_helper)
     UPDATE_DISCONNECTED TRUE
     BUILD_ALWAYS FALSE
     # Replace list separator ';' with a whitespace
-    LIST_SEPARATOR " "
+    # LIST_SEPARATOR " "
     PATCH_COMMAND "${PATCH_COMMAND}"
     CONFIGURE_HANDLED_BY_BUILD ${CONFIGURE_HANDLED_BY_BUILD}
     CONFIGURE_COMMAND "${CONFIGURE_COMMAND}"
