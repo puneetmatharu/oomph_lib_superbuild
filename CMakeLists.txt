@@ -72,6 +72,22 @@ oomph_path_option(
   DEFAULT "${CMAKE_CURRENT_LIST_DIR}/install"
   DOCSTRING "Base installation directory for third-party libraries."
 )
+oomph_path_option(
+  FLAG OOMPH_USE_OPENBLAS_FROM
+  DOCSTRING "The path to a preinstalled version of OpenBLAS."
+)
+oomph_path_option(
+  FLAG OOMPH_USE_GMP_FROM
+  DOCSTRING "The path to a preinstalled version of GMP."
+)
+oomph_path_option(
+  FLAG OOMPH_USE_MPFR_FROM
+  DOCSTRING "The path to a preinstalled version of MPFR."
+)
+oomph_path_option(
+  FLAG OOMPH_USE_BOOST_FROM
+  DOCSTRING "The path to a preinstalled version of Boost."
+)
 
 # cmake-format: on
 # ----------------------[ FIND REQUIRED/DESIRED PACKAGES ]----------------------
@@ -130,8 +146,6 @@ endif()
 # 0.3.24 to be installed via Homebrew for now...
 if(OOMPH_USE_OPENBLAS_FROM)
   find_package(OpenBLAS 0.3.24 REQUIRED PATHS ${OOMPH_USE_OPENBLAS_FROM})
-elseif(APPLE)
-  find_package(OpenBLAS REQUIRED PATHS /opt/homebrew/Cellar/openblas/0.3.24/)
 elseif(OOMPH_BUILD_OPENBLAS)
   include(OomphGetExternalOpenBLAS)
 endif()
@@ -142,7 +156,7 @@ endif()
 # CXX=g++" is passed to CMake
 
 # If we're given CGAL or need to build it
-if(OOMPH_USE_CGAL_FROM OR OOMPH_BUILD_CGAL)
+if(OOMPH_BUILD_CGAL)
   # If we're given GMP
   if(OOMPH_USE_GMP_FROM)
     find_package(GMP REQUIRED)
@@ -162,50 +176,22 @@ if(OOMPH_USE_CGAL_FROM OR OOMPH_BUILD_CGAL)
   endif()
 
   # If we're given CGAL
-  if(OOMPH_USE_CGAL_FROM)
-    find_package(
-      CGAL 5.6 REQUIRED
-      PATHS ${OOMPH_USE_CGAL_FROM}
-      NO_DEFAULT_PATH)
-  elseif(OOMPH_BUILD_CGAL)
-    include(OomphGetExternalCGAL)
-    set(GMP_FOUND TRUE)
-    set(MPFR_FOUND TRUE)
-    set(BOOST_FOUND TRUE)
-    set(CGAL_FOUND TRUE)
-  endif()
-
-  # Make sure we have everything we need
-  if(NOT GMP_FOUND)
-    message(FATAL_ERROR "Unable to locate GMP!")
-  elseif(NOT MPFR_FOUND)
-    message(FATAL_ERROR "Unable to locate MPFR!")
-  elseif(NOT BOOST_FOUND)
-    message(FATAL_ERROR "Unable to locate Boost!")
-  elseif(NOT CGAL_FOUND)
-    message(FATAL_ERROR "Unable to locate CGAL!")
-  endif()
+  include(OomphGetExternalCGAL)
+  set(GMP_FOUND TRUE)
+  set(MPFR_FOUND TRUE)
+  set(BOOST_FOUND TRUE)
+  set(CGAL_FOUND TRUE)
 endif()
 
 # ----------------------------------[ MUMPS ]----------------------------------
 
-if(OOMPH_USE_MUMPS_FROM)
-  find_package(
-    MUMPS 5.6.2.2 REQUIRED
-    PATHS ${OOMPH_USE_MUMPS_FROM}
-    NO_DEFAULT_PATH)
-elseif(OOMPH_BUILD_MUMPS)
+if(OOMPH_BUILD_MUMPS)
   include(OomphGetExternalMUMPS)
 endif()
 
 # ----------------------------------[ HYPRE ]----------------------------------
 
-if(OOMPH_USE_HYPRE_FROM)
-  find_package(
-    HYPRE 2.30.0 REQUIRED
-    PATHS ${OOMPH_USE_HYPRE_FROM}
-    NO_DEFAULT_PATH)
-elseif(OOMPH_BUILD_HYPRE)
+if(OOMPH_BUILD_HYPRE)
   if(NOT OpenBLAS_LIBRARIES)
     message(FATAL_ERROR "Refusing to build HYPRE without OpenBLAS!")
   endif()
@@ -214,12 +200,7 @@ endif()
 
 # ---------------------------------[ TRILINOS ]--------------------------------
 
-if(OOMPH_USE_TRILINOS_FROM)
-  find_package(
-    Trilinos 14.4.0 REQUIRED
-    PATHS ${OOMPH_USE_TRILINOS_FROM}
-    NO_DEFAULT_PATH)
-elseif(OOMPH_BUILD_TRILINOS)
+if(OOMPH_BUILD_TRILINOS)
   if(NOT OpenBLAS_LIBRARIES)
     message(FATAL_ERROR "Refusing to build Trilinos without OpenBLAS!")
   endif()
