@@ -130,14 +130,6 @@ set(OOMPH_THIRD_PARTY_TAR_FILE_URL
 # Set up MPI functionality (see cmake/OomphMPI.cmake)
 if(OOMPH_ENABLE_MPI)
   include(OomphMPI)
-
-  # Sanity check
-  if(NOT OOMPH_MPI_NUM_PROC MATCHES "^[0-9]+$")
-    message(
-      FATAL_ERROR
-        "The flag 'OOMPH_MPI_NUM_PROC' must be an integer, not ${OOMPH_MPI_NUM_PROC}!"
-    )
-  endif()
 endif()
 
 # --------------------------------[ OPENBLAS ]---------------------------------
