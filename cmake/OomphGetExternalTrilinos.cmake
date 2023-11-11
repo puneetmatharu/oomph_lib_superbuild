@@ -26,8 +26,13 @@ set(TRILINOS_TARBALL_URL
 )
 set(TRILINOS_INSTALL_DIR "${OOMPH_THIRD_PARTY_INSTALL_DIR}/trilinos")
 
+set(ENABLE_TRILINOS_TESTS ON)
+if(OOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTS)
+  set(ENABLE_TRILINOS_TESTS OFF)
+endif()
+
 set(TRILINOS_OPTION_ARGS
-    -DTrilinos_ENABLE_TESTS=OFF
+    -DTrilinos_ENABLE_TESTS=${ENABLE_TRILINOS_TESTS}
     -DTrilinos_ENABLE_EXAMPLES=OFF
     -DTrilinos_ENABLE_ALL_PACKAGES=OFF
     -DTrilinos_ENABLE_ALL_OPTIONAL_PACKAGES=OFF
@@ -53,10 +58,11 @@ if(OOMPH_ENABLE_MPI)
     message(FATAL_ERROR "Requested MPI but MPI_CXX_INCLUDE_DIRS is not set!")
   endif()
 
-  # ARGH this doesn't work. Can't seem to pass multiple include paths. Will just
-  # take the first path Have to be careful to concatenate multi-path arguments
-  # into a semicolon separated string before passing it to ExternalProject
-  # string(JOIN $<SEMICOLON> MPI_BASE_DIR ${MPI_CXX_INCLUDE_DIRS})
+  # Need to do some filtering on MPI_CXX_INCLUDE_DIRS if there are multiple
+  # include paths as Trilinos doesn't accept a list of arguments to
+  # MPI_BASE_DIR. The approach here is to just take the first path from that
+  # list that has lib/ and include/ subfolders. If we can't find a match then
+  # we'll just take the first path in the list
 
   # Default to first entry of MPI_CXX_INCLUDE_DIRS as base directory
   list(GET MPI_CXX_INCLUDE_DIRS 0 MPI_BASE_DIR)
