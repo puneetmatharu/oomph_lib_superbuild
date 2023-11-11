@@ -61,4 +61,10 @@ oomph_get_external_project_helper(
   TEST_COMMAND ""
   INSTALL_BYPRODUCTS "")
 
+# Hypre depends on OpenBLAS being built. If we're building OpenBLAS ourselves
+# then we need to make sure that it gets built before Hypre
+if(TARGET openblas)
+  add_dependencies(hypre openblas)
+endif()
+
 # ---------------------------------------------------------------------------------

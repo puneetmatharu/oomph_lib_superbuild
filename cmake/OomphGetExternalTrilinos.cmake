@@ -109,5 +109,11 @@ oomph_get_external_project_helper(
   TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS} -E TeuchosCore_TypeConversions_UnitTest
   INSTALL_BYPRODUCTS "")
 
+# Trilinos depends on OpenBLAS being built. If we're building OpenBLAS ourselves
+# then we need to make sure that it gets built before Trilinos
+if(TARGET openblas)
+  add_dependencies(trilinos openblas)
+endif()
+
 # ---------------------------------------------------------------------------------
 # cmake-format: on
