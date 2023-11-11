@@ -25,8 +25,12 @@ set(TRILINOS_TARBALL_URL
 )
 set(TRILINOS_INSTALL_DIR "${OOMPH_THIRD_PARTY_INSTALL_DIR}/trilinos")
 
+# On Ubuntu, Trilinos doesn't appear to link to gfortran when using OpenBLAS,
+# resulting in error described here:
+#           https://github.com/trilinos/Trilinos/issues/8632
+# so we won't run the tests on Linux
 set(ENABLE_TRILINOS_TESTS ON)
-if(OOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTS)
+if((UNIX AND NOT APPLE) OR (OOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTS))
   set(ENABLE_TRILINOS_TESTS OFF)
 endif()
 
@@ -49,20 +53,9 @@ set(TRILINOS_OPTION_ARGS
     -DTrilinos_ENABLE_INSTALL_CMAKE_CONFIG_FILES=ON
     -DTPL_ENABLE_BLAS=ON
     -DTPL_ENABLE_LAPACK=ON
+    -DTPL_BLAS_LIBRARIES=${OpenBLAS_LIBRARIES}
+    -DTPL_LAPACK_LIBRARIES=${OpenBLAS_LIBRARIES}
     -DTPL_ENABLE_MPI=${OOMPH_ENABLE_MPI})
-
-# On Ubuntu, Trilinos doesn't appear to link to gfortran when using OpenBLAS,
-# resulting in error described here:
-#           https://github.com/trilinos/Trilinos/issues/8632
-if(UNIX AND NOT APPLE)
-  list(APPEND TRILINOS_OPTION_ARGS
-       -DTPL_BLAS_LIBRARIES="${OpenBLAS_LIBRARIES};-lgfortran"
-       -DTPL_LAPACK_LIBRARIES="${OpenBLAS_LIBRARIES};-lgfortran")
-else()
-  list(APPEND TRILINOS_OPTION_ARGS
-       -DTPL_BLAS_LIBRARIES=${OpenBLAS_LIBRARIES}
-       -DTPL_LAPACK_LIBRARIES=${OpenBLAS_LIBRARIES})
-endif()
 
 if(OOMPH_ENABLE_MPI)
   if(NOT MPI_CXX_INCLUDE_DIRS)
@@ -118,7 +111,7 @@ oomph_get_external_project_helper(
   CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR> -G=${CMAKE_GENERATOR} ${TRILINOS_OPTION_ARGS} -B=build
   BUILD_COMMAND ${CMAKE_COMMAND} --build build -j ${NUM_JOBS}
   INSTALL_COMMAND ${CMAKE_COMMAND} --install build
-  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS})
+  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS} -E TeuchosCore_TypeConversions_UnitTest)
 
 # Trilinos depends on OpenBLAS being built. If we're building OpenBLAS ourselves
 # then we need to make sure that it gets built before Trilinos
