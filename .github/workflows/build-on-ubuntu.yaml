@@ -35,7 +35,7 @@ jobs:
       - name: Upload build logs
         uses: actions/upload-artifact@v3
         with:
-          name: build_logs-os_${{ runner.os }}-mpi_${{ matrix.mpi }}.log
+          name: build_logs-os_${{ runner.os }}-mpi_${{ matrix.mpi }}
           path: ./build/logs/
 
       - name: Propagate build status

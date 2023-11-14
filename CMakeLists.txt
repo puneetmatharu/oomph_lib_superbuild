@@ -23,8 +23,7 @@
 cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 project(
   oomph_lib_superbuild
-  DESCRIPTION
-    "A wrapper to oomph-lib that can also build third-party libraries."
+  DESCRIPTION "Builds the third-party libraries used by oomph-lib."
   VERSION 0.0.1
   HOMEPAGE_URL "https://oomph-lib.github.io/oomph-lib/doc/html/"
   LANGUAGES C CXX Fortran)
@@ -139,6 +138,11 @@ if(OOMPH_USE_OPENBLAS_FROM)
 elseif(OOMPH_BUILD_OPENBLAS)
   include(OomphGetExternalOpenBLAS)
 endif()
+
+# Get the OpenBLAS root directory (required by MUMPS)
+cmake_path(GET OpenBLAS_LIBRARIES PARENT_PATH OpenBLAS_LIBDIR)
+cmake_path(GET OpenBLAS_LIBDIR PARENT_PATH OpenBLAS_ROOT)
+set(OpenBLAS_ROOT "${OpenBLAS_ROOT}" CACHE PATH "" FORCE)
 
 # ----------------------------------[ CGAL ]-----------------------------------
 

@@ -18,11 +18,9 @@
 # ...to be filled in...
 #
 # =============================================================================
-# cmake-format: on
 include_guard()
 
-set(OPENBLAS_TARBALL_URL
-    ${OOMPH_THIRD_PARTY_TAR_FILE_URL}/OpenBLAS-0.3.24.tar.gz)
+set(OPENBLAS_TARBALL_URL ${OOMPH_THIRD_PARTY_TAR_FILE_URL}/OpenBLAS-0.3.24.tar.gz)
 set(OPENBLAS_INSTALL_DIR "${OOMPH_THIRD_PARTY_INSTALL_DIR}/openblas")
 
 # Define how to configure/build/install the project
@@ -38,10 +36,10 @@ oomph_get_external_project_helper(
   TEST_COMMAND ""
   INSTALL_BYPRODUCTS "")
 
-# Define OpenBLAS_LIBRARIES for HYPRE and Trilinos to use
-set(OpenBLAS_LIBNAME
-    "${CMAKE_STATIC_LIBRARY_PREFIX}openblas${CMAKE_STATIC_LIBRARY_SUFFIX}")
-set(OpenBLAS_LIBRARIES "${OPENBLAS_INSTALL_DIR}/lib/${OpenBLAS_LIBNAME}" CACHE
-    PATH "" FORCE)
+# Define the global variables OpenBLAS_ROOT and OpenBLAS_LIBRARIES for MUMPS,
+# HYPRE and Trilinos to use
+set(OpenBLAS_LIBNAME "${CMAKE_STATIC_LIBRARY_PREFIX}openblas${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set(OpenBLAS_LIBRARIES "${OPENBLAS_INSTALL_DIR}/lib/${OpenBLAS_LIBNAME}" CACHE PATH "" FORCE)
 
 # ---------------------------------------------------------------------------------
+# cmake-format: on
