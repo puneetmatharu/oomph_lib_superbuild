@@ -24,7 +24,7 @@ cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 project(
   oomph_lib_superbuild
   DESCRIPTION "Builds the third-party libraries used by oomph-lib."
-  VERSION 0.0.1
+  VERSION 0.5.0
   HOMEPAGE_URL "https://oomph-lib.github.io/oomph-lib/doc/html/"
   LANGUAGES C CXX Fortran)
 
