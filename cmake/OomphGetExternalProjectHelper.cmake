@@ -31,7 +31,7 @@ function(oomph_get_external_project_helper)
       BUILD_COMMAND
       INSTALL_COMMAND
       TEST_COMMAND
-      INSTALL_BYPRODUCTS)
+      BUILD_BYPRODUCTS)
 
   # Process the arguments passed in
   include(CMakeParseArguments)
@@ -46,7 +46,7 @@ function(oomph_get_external_project_helper)
   set(BUILD_COMMAND ${${PREFIX}_BUILD_COMMAND})
   set(INSTALL_COMMAND ${${PREFIX}_INSTALL_COMMAND})
   set(TEST_COMMAND ${${PREFIX}_TEST_COMMAND})
-  set(INSTALL_BYPRODUCTS ${${PREFIX}_INSTALL_BYPRODUCTS})
+  set(BUILD_BYPRODUCTS ${${PREFIX}_BUILD_BYPRODUCTS})
   set(CONFIGURE_HANDLED_BY_BUILD FALSE)
   if(${${PREFIX}_CONFIGURE_HANDLED_BY_BUILD})
     set(CONFIGURE_HANDLED_BY_BUILD TRUE)
@@ -82,7 +82,7 @@ function(oomph_get_external_project_helper)
     BUILD_COMMAND "${BUILD_COMMAND}"
     TEST_COMMAND "${TEST_COMMAND}"
     INSTALL_COMMAND "${INSTALL_COMMAND}"
-    INSTALL_BYPRODUCTS "${INSTALL_BYPRODUCTS}")
+    BUILD_BYPRODUCTS "${BUILD_BYPRODUCTS}")
 endfunction()
 # cmake-format: on
 

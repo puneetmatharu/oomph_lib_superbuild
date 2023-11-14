@@ -32,9 +32,7 @@ oomph_get_external_project_helper(
   BUILD_COMMAND ${MAKE_EXECUTABLE} --jobs=${NUM_JOBS} CXX=${CMAKE_CXX_COMPILER}
                 CC=${CMAKE_C_COMPILER} FC=${CMAKE_Fortran_COMPILER}
   INSTALL_COMMAND ${MAKE_EXECUTABLE} --jobs=${NUM_JOBS}
-                  PREFIX=${OPENBLAS_INSTALL_DIR} install
-  TEST_COMMAND ""
-  INSTALL_BYPRODUCTS "")
+                  PREFIX=${OPENBLAS_INSTALL_DIR} install)
 
 # Define the global variables OpenBLAS_ROOT and OpenBLAS_LIBRARIES for MUMPS,
 # HYPRE and Trilinos to use

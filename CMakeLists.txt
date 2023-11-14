@@ -140,9 +140,11 @@ elseif(OOMPH_BUILD_OPENBLAS)
 endif()
 
 # Get the OpenBLAS root directory (required by MUMPS)
-cmake_path(GET OpenBLAS_LIBRARIES PARENT_PATH OpenBLAS_LIBDIR)
-cmake_path(GET OpenBLAS_LIBDIR PARENT_PATH OpenBLAS_ROOT)
-set(OpenBLAS_ROOT "${OpenBLAS_ROOT}" CACHE PATH "" FORCE)
+if(OpenBLAS_LIBRARIES)
+  cmake_path(GET OpenBLAS_LIBRARIES PARENT_PATH OpenBLAS_LIBDIR)
+  cmake_path(GET OpenBLAS_LIBDIR PARENT_PATH OpenBLAS_ROOT)
+  set(OpenBLAS_ROOT "${OpenBLAS_ROOT}" CACHE PATH "" FORCE)
+endif()
 
 # ----------------------------------[ CGAL ]-----------------------------------
 

@@ -64,8 +64,7 @@ oomph_get_external_project_helper(
                     ${MUMPS_CMAKE_BUILD_ARGS} -G=${CMAKE_GENERATOR} -B=build
   BUILD_COMMAND ${CMAKE_COMMAND} --build build -j ${NUM_JOBS}
   INSTALL_COMMAND ${CMAKE_COMMAND} --install build
-  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS}
-  INSTALL_BYPRODUCTS "")
+  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS})
 
 # If we're building OpenBLAS, make sure we build it before we get around to
 # building MUMPS
