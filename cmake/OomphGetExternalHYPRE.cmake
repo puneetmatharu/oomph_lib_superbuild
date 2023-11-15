@@ -58,7 +58,7 @@ oomph_get_external_project_helper(
     -G=${CMAKE_GENERATOR} -S=src -B=src/cmbuild
   BUILD_COMMAND cmake --build src/cmbuild -j ${NUM_JOBS}
   INSTALL_COMMAND cmake --install src/cmbuild
-  TEST_COMMAND "")
+  TEST_COMMAND ./src/cmbuild/test/ij)
 
 # Hypre depends on OpenBLAS being built. If we're building OpenBLAS ourselves
 # then we need to make sure that it gets built before Hypre
