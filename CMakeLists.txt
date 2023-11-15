@@ -20,9 +20,9 @@
 # This library is distributed with a GNU LGPL License; see LICENSE.txt.
 # ==============================================================================
 # cmake-format: on
-cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 project(
-  oomph_lib_superbuild
+  oomph_lib_third_party_libraries
   DESCRIPTION "Builds the third-party libraries used by oomph-lib."
   VERSION 0.5.0
   HOMEPAGE_URL "https://oomph-lib.github.io/oomph-lib/doc/html/"

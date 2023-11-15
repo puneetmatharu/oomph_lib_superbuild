@@ -41,6 +41,7 @@
 <h2>Table of contents</h2>
 
 - [Description](#description)
+- [Prerequisites](#prerequisites)
 - [Library versions](#library-versions)
 - [Example](#example)
 - [Build options](#build-options)
@@ -51,6 +52,14 @@
 ## Description
 
 This project builds and installs the optional third-party libraries used by [`oomph-lib`](https://github.com/oomph-lib/oomph-lib).
+
+## Prerequisites
+
+Tool    | Version
+--------|--------
+`CMake` | 3.24
+
+If you cannot obtain a recent enough version of CMake via your favourite package manager, you will need to build it from source. Worry not however, this is a straightforward task. For details on how to do this, see [the instructions here](https://github.com/puneetmatharu/oomph-lib/tree/feature-shared-cmake#building-cmake).
 
 ## Library versions
 
