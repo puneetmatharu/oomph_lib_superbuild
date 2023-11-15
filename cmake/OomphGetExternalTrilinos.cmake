@@ -111,7 +111,7 @@ oomph_get_external_project_helper(
   CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR> -G=${CMAKE_GENERATOR} ${TRILINOS_OPTION_ARGS} -B=build
   BUILD_COMMAND ${CMAKE_COMMAND} --build build -j ${NUM_JOBS}
   INSTALL_COMMAND ${CMAKE_COMMAND} --install build
-  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS} -E "TeuchosCore_TypeConversions_UnitTest|Epetra_ImportExport_test_LL_MPI_4")
+  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS} --output-on-failure -E "TeuchosCore_TypeConversions_UnitTest|Epetra_ImportExport_test_LL_MPI_4")
 
 # Trilinos depends on OpenBLAS. If we're building OpenBLAS ourselves then we
 # need to make sure that it gets built before Trilinos
