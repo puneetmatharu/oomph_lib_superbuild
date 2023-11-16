@@ -135,6 +135,7 @@ endif()
 
 if(OOMPH_USE_OPENBLAS_FROM)
   find_package(OpenBLAS 0.3.24 REQUIRED PATHS ${OOMPH_USE_OPENBLAS_FROM})
+  set(OOMPH_BUILD_OPENBLAS OFF CACHE PATH "Build OpenBLAS?" FORCE)
 elseif(OOMPH_BUILD_OPENBLAS)
   include(OomphGetExternalOpenBLAS)
 endif()
