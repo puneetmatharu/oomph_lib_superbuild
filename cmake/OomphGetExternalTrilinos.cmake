@@ -34,7 +34,9 @@ if((UNIX AND NOT APPLE) OR (OOMPH_DISABLE_THIRD_PARTY_LIBRARY_TESTS))
   set(ENABLE_TRILINOS_TESTS OFF)
 endif()
 
-set(TRILINOS_OPTION_ARGS
+set(TRILINOS_CMAKE_BUILD_ARGS
+    -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
+    -DCMAKE_CXX_EXTENSIONS=${CMAKE_CXX_EXTENSIONS}
     -DTrilinos_ENABLE_TESTS=${ENABLE_TRILINOS_TESTS}
     -DTrilinos_ENABLE_Fortran=ON
     -DTrilinos_ENABLE_EXAMPLES=OFF
@@ -51,6 +53,7 @@ set(TRILINOS_OPTION_ARGS
     -DTrilinos_ENABLE_Triutils=ON
     -DTrilinos_INSTALL_LIBRARIES_AND_HEADERS=ON
     -DTrilinos_ENABLE_INSTALL_CMAKE_CONFIG_FILES=ON
+    -DKOKKOS_USE_CXX_EXTENSIONS=ON
     -DTPL_ENABLE_BLAS=ON
     -DTPL_ENABLE_LAPACK=ON
     -DTPL_BLAS_LIBRARIES=${OpenBLAS_LIBRARIES}
@@ -97,21 +100,24 @@ if(OOMPH_ENABLE_MPI)
   endforeach()
 
   # Now append to the full list of arguments
-  list(APPEND TRILINOS_OPTION_ARGS -DMPI_BASE_DIR=${MPI_BASE_DIR})
+  list(APPEND TRILINOS_CMAKE_BUILD_ARGS -DMPI_BASE_DIR=${MPI_BASE_DIR})
 endif()
 
-# FIXME: The TeuchosCore_TypeConversions_UnitTest test dies halfway through; not sure why so we'll
-# just filter it out for now...
+# FIXME: The TeuchosCore_TypeConversions_UnitTest and Epetra_ImportExport_test_LL_MPI_4
+# tests dies on macOS. Not sure why so we'll just filter it out for now. Need to come back
+
+set(TRILINOS_TESTS_TO_EXCLUDE TeuchosCore_TypeConversions_UnitTest Epetra_ImportExport_test_LL_MPI_4)
+string(JOIN "|" CTEST_EXCLUDE_REGEX_STRING ${TRILINOS_TESTS_TO_EXCLUDE})
 
 # Define how to configure/build/install the project
 oomph_get_external_project_helper(
   PROJECT_NAME trilinos
   URL "${TRILINOS_TARBALL_URL}"
   INSTALL_DIR "${TRILINOS_INSTALL_DIR}"
-  CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR> -G=${CMAKE_GENERATOR} ${TRILINOS_OPTION_ARGS} -B=build
+  CONFIGURE_COMMAND ${CMAKE_COMMAND} --install-prefix=<INSTALL_DIR> -G=${CMAKE_GENERATOR} ${TRILINOS_CMAKE_BUILD_ARGS} -B=build
   BUILD_COMMAND ${CMAKE_COMMAND} --build build -j ${NUM_JOBS}
   INSTALL_COMMAND ${CMAKE_COMMAND} --install build
-  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS} --output-on-failure -E "TeuchosCore_TypeConversions_UnitTest|Epetra_ImportExport_test_LL_MPI_4")
+  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS} --output-on-failure -E "${CTEST_EXCLUDE_REGEX_STRING}")
 
 # Trilinos depends on OpenBLAS. If we're building OpenBLAS ourselves then we
 # need to make sure that it gets built before Trilinos
