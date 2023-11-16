@@ -3,6 +3,10 @@
 name: macOS
 on: push
 
+# Print the output of a test if it fails
+env:
+  CTEST_OUTPUT_ON_FAILURE: 1
+
 # ------------------------------------------------------------------------------
 
 jobs:
@@ -20,6 +24,10 @@ jobs:
       - name: Install dependencies
         run: brew install ninja automake openblas gmp mpfr && brew reinstall gcc
 
+      - name: Install MPI dependencies (if required)
+        if: matrix.mpi == 'ON'
+        run: brew install open-mpi
+
       - name: Get CMake v3.24
         uses: lukka/get-cmake@latest
         with:
@@ -27,10 +35,6 @@ jobs:
 
       - name: Check CMake version
         run: cmake --version
-
-      - name: Install MPI dependencies (if required)
-        if: matrix.mpi == 'ON'
-        run: brew install open-mpi
 
       - name: Configure
         run: |

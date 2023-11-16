@@ -3,6 +3,10 @@
 name: Ubuntu
 on: push
 
+# Print the output of a test if it fails
+env:
+  CTEST_OUTPUT_ON_FAILURE: 1
+
 # ------------------------------------------------------------------------------
 
 jobs:
