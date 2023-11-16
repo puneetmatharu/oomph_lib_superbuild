@@ -23,7 +23,7 @@ include_guard()
 
 # Where to get the code from and where to install it to
 set(MUMPS_TARBALL_URL
-    https://github.com/puneetmatharu/mumps/archive/refs/tags/v5.6.2.4.tar.gz)
+    https://github.com/puneetmatharu/mumps/archive/refs/tags/v5.6.2.5.tar.gz)
 set(MUMPS_INSTALL_DIR "${OOMPH_THIRD_PARTY_INSTALL_DIR}/mumps")
 
 # Should we run the tests?
@@ -64,7 +64,8 @@ oomph_get_external_project_helper(
                     ${MUMPS_CMAKE_BUILD_ARGS} -G=${CMAKE_GENERATOR} -B=build
   BUILD_COMMAND ${CMAKE_COMMAND} --build build -j ${NUM_JOBS}
   INSTALL_COMMAND ${CMAKE_COMMAND} --install build
-  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS} --output-on-failure)
+  TEST_COMMAND ${CMAKE_CTEST_COMMAND} --test-dir build -j ${NUM_JOBS}
+               --output-on-failure)
 
 # If we're building OpenBLAS, make sure we build it before we get around to
 # building MUMPS
