@@ -26,7 +26,7 @@ function(oomph_get_external_project_helper)
   set(FLAGS CONFIGURE_HANDLED_BY_BUILD)
   set(SINGLE_VALUE_ARGS PROJECT_NAME URL INSTALL_DIR)
   set(MULTI_VALUE_ARGS
-      _PATCH_COMMAND
+      PATCH_COMMAND
       CONFIGURE_COMMAND
       BUILD_COMMAND
       INSTALL_COMMAND
@@ -64,6 +64,7 @@ function(oomph_get_external_project_helper)
     URL "${URL}"
     LOG_DIR "${CMAKE_BINARY_DIR}/logs"
     BUILD_IN_SOURCE TRUE
+    LOG_PATCH TRUE
     LOG_UPDATE TRUE
     LOG_DOWNLOAD TRUE
     LOG_CONFIGURE TRUE
