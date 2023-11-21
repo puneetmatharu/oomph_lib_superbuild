@@ -226,4 +226,9 @@ endif()
 include(OomphDocProjectSettings)
 oomph_doc_project_settings()
 
+# -------------------------[ HOW TO USE THE LIBRARIES ]------------------------
+
+include(OomphPrintThirdPartyLibrariesUsage)
+oomph_doc_third_party_libraries_usage()
+
 # -----------------------------------------------------------------------------

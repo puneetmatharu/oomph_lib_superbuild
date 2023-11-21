@@ -80,21 +80,17 @@ function(oomph_doc_project_settings)
 
   # Doc it
   message(NOTICE "${OOMPH_SETTINGS_MESSAGE}")
+  message(
+    STATUS
+      "${BOLD_MAGENTA}Project configured! Don't forget to run the build step with:\n\n"
+      "\tcmake --build <build-directory>${RESET}\n")
 
   # Log to file if needed
   set(OUTPUT_FILE
       "${CMAKE_CURRENT_BINARY_DIR}/oomphlib-third-party-libraries-info.log")
   if(${PREFIX}_ENABLE_SAVE_TO_FILE
      OR ${PREFIX}_ENABLE_ALSO_PRINT_SETTINGS_AFTER_INSTALL)
-    file(WRITE
-         "${CMAKE_CURRENT_BINARY_DIR}/oomphlib-third-party-libraries-info.log"
-         "${OOMPH_SETTINGS_MESSAGE}")
-  endif()
-
-  # Doc during install step; oomph_doc_project_settings(...) must be called at
-  # the end of the configuration step for this to get doced at the end
-  if(${PREFIX}_ENABLE_ALSO_PRINT_SETTINGS_AFTER_INSTALL)
-    install(CODE "execute_process(COMMAND cat \"${OUTPUT_FILE}\")")
+    file(WRITE "${OUTPUT_FILE}" "${OOMPH_SETTINGS_MESSAGE}")
   endif()
 endfunction()
 # ------------------------------------------------------------------------------
