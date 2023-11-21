@@ -175,6 +175,26 @@ if(OOMPH_BUILD_CGAL)
   set(MPFR_FOUND TRUE)
   set(BOOST_FOUND TRUE)
   set(CGAL_FOUND TRUE)
+else()
+  # If we haven't been asked to build CGAL but the user (bizarrely) told us
+  # where to find GMP, MPFR and/or Boost...
+  set(OOMPH_PASSED_CGAL_DEPS)
+  if(OOMPH_USE_GMP_FROM)
+    list(APPEND OOMPH_PASSED_CGAL_DEPS "'OOMPH_USE_GMP_FROM'")
+  endif()
+  if(OOMPH_USE_MPFR_FROM)
+    list(APPEND OOMPH_PASSED_CGAL_DEPS "'OOMPH_USE_MPFR_FROM'")
+  endif()
+  if(OOMPH_USE_BOOST_FROM)
+    list(APPEND OOMPH_PASSED_CGAL_DEPS "'OOMPH_USE_BOOST_FROM'")
+  endif()
+  if(OOMPH_PASSED_CGAL_DEPS)
+    string(JOIN " and " OOMPH_PASSED_CGAL_DEPS_AS_STR ${OOMPH_PASSED_CGAL_DEPS})
+    message(
+      WARNING
+        "\nYou specified ${OOMPH_PASSED_CGAL_DEPS_AS_STR} but did not enable the build of CGAL. Did you forget to pass '-DOOMPH_BUILD_CGAL=ON'?"
+    )
+  endif()
 endif()
 
 # ----------------------------------[ MUMPS ]----------------------------------
